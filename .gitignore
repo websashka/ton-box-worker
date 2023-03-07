@@ -7,3 +7,5 @@ rabbitmq/log/
 
 
 *.log
+
+private/

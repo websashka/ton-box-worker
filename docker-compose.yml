@@ -1,4 +1,4 @@
-version: "3"
+version: "3.1"
 
 services:
   rabbitmq:
@@ -8,8 +8,7 @@ services:
     ports:
       - 15672:15672
     volumes:
-      - ./rabbitmq/data/:/var/lib/rabbitmq/
-      - ./rabbitmq/log/:/var/log/rabbitmq
+      - rabbitmq:/var/lib/rabbitmq/
     healthcheck:
       test: [ "CMD", "rabbitmqctl", "status" ]
       interval: 5s
@@ -26,7 +25,22 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        TON_REPO: https://github.com/ton-blockchain/ton
+        TON_BRANCH: master
     env_file:
       - .env
     volumes:
       - ./logs:/app/logs
+    secrets:
+      - private_key
+      - public_key
+
+volumes:
+  rabbitmq:
+
+secrets:
+  private_key:
+    file: private/client
+  public_key:
+    file: private/server.pub
